@@ -94,7 +94,6 @@ export const getReels = (callback) => {
 }
 
 export const getStories = (following, callback) => {
-  const now = new Date()
   const uids = [...following, 'public'].slice(0, 10)
   const q = query(
     collection(db, 'posts'),
@@ -137,6 +136,18 @@ export const unlikePost = async (postId, uid) => {
   })
 }
 
+export const toggleLike = async (postId, userId) => {
+  const postRef = doc(db, 'posts', postId)
+  const postSnap = await getDoc(postRef)
+  if (!postSnap.exists()) return
+  const likes = postSnap.data().likes || []
+  const alreadyLiked = likes.includes(userId)
+  await updateDoc(postRef, {
+    likes: alreadyLiked ? arrayRemove(userId) : arrayUnion(userId),
+    likesCount: increment(alreadyLiked ? -1 : 1),
+  })
+}
+
 export const addComment = async (postId, uid, text, authorUid) => {
   const commentRef = doc(collection(db, 'posts', postId, 'comments'))
   await setDoc(commentRef, {
@@ -172,18 +183,4 @@ export const deletePost = async (postId, uid, mediaURL) => {
   if (mediaURL) {
     try { await deleteObject(ref(storage, mediaURL)) } catch (_) {}
   }
-  export async function toggleLike(postId, userId) {
-  const postRef = doc(db, 'posts', postId)
-  const postSnap = await getDoc(postRef)
-  if (!postSnap.exists()) return
-  const likes = postSnap.data().likes || []
-  const alreadyLiked = likes.includes(userId)
-  await updateDoc(postRef, {
-    likes: alreadyLiked ? arrayRemove(userId) : arrayUnion(userId)
-  })
-}
-
-export async function deletePost(postId) {
-  await deleteDoc(doc(db, 'posts', postId))
-}
 }
