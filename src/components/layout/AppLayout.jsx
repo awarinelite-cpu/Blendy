@@ -3,7 +3,7 @@ import { useState } from 'react'
 import { Outlet, NavLink, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import {
-  HiHome, HiCompass, HiFilm, HiPhotograph, HiChat,
+  HiHome, HiMap, HiFilm, HiPhotograph, HiChat,
   HiBell, HiUser, HiLogout, HiPencil, HiMenuAlt2, HiX,
   HiHashtag,
 } from 'react-icons/hi'
@@ -11,7 +11,7 @@ import CreatePostModal from '../feed/CreatePostModal'
 
 const NAV = [
   { to: '/',            icon: HiHome,        label: 'Home',         exact: true },
-  { to: '/explore',     icon: HiCompass,     label: 'Explore' },
+  { to: '/explore',     icon: HiMap,         label: 'Explore' },
   { to: '/reels',       icon: HiFilm,        label: 'Reels' },
   { to: '/stories',     icon: HiPhotograph,  label: 'Stories' },
   { to: '/tweets',      icon: HiHashtag,     label: 'Tweets' },
