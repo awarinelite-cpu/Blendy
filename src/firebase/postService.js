@@ -172,4 +172,18 @@ export const deletePost = async (postId, uid, mediaURL) => {
   if (mediaURL) {
     try { await deleteObject(ref(storage, mediaURL)) } catch (_) {}
   }
+  export async function toggleLike(postId, userId) {
+  const postRef = doc(db, 'posts', postId)
+  const postSnap = await getDoc(postRef)
+  if (!postSnap.exists()) return
+  const likes = postSnap.data().likes || []
+  const alreadyLiked = likes.includes(userId)
+  await updateDoc(postRef, {
+    likes: alreadyLiked ? arrayRemove(userId) : arrayUnion(userId)
+  })
+}
+
+export async function deletePost(postId) {
+  await deleteDoc(doc(db, 'posts', postId))
+}
 }
